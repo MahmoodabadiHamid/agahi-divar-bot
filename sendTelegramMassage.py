@@ -26,7 +26,7 @@ def GetContent(adsURL):# This function Get phone, area and comment of ads
     html=req.get(testH).text
     text=soup(html,'lxml').find('p',{'class':'kt-description-row__text post-description kt-description-row__text--primary'})
     comments=str(text.text)
-    price = soup(html,'lxml').find('div',{'class':'kt-base-row kt-base-row--large kt-unexpandable-row'}).text
+    price = ''.join([i.text+'\n' for i in soup(html,'lxml').find_all('div',{'class':'kt-base-row kt-base-row--large kt-unexpandable-row'})])
     return comments+'\n'+price
 
 
