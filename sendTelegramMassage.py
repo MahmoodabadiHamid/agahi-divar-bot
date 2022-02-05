@@ -13,22 +13,50 @@ phoneLogs='phoneLogs.log'
 
 def getAdsURL(firstPageURL):# This function get all ads url adres's
     html =req.get(firstPageURL).text
-    href =soup(html,'html5lib').find_all('a',{'class':'kt-post-card kt-post-card--outlined kt-post-card--has-chat'})
+    href =soup(html,'lxml').find_all('a',{'class':'kt-post-card kt-post-card--outlined kt-post-card--has-chat'})
     return href
 
 def getShortURL(longURL):
-    return 'https://divar.ir/v/'+longURL.split('/')[-1]
+    return 'https://divar.ir/v/'+longURL['href'].split('/')[-1]
 
 
 def GetContent(adsURL):# This function Get phone, area and comment of ads
-    testH ='https://divar.ir'+adsURL.get('href')
+    testH ='https://divar.ir'+adsURL['href']
     #Get comment area_________________________
     html=req.get(testH).text
-    #print(html)
-    temp=soup(html,'html5lib').find('div',{'class':'kt-base-row kt-base-row--large kt-description-row kt-description-row--padded'})
-    comments=str(temp)
-    comments=(html2text.html2text(comments))
-    return comments
+    text=soup(html,'lxml').find('p',{'class':'kt-description-row__text post-description kt-description-row__text--primary'})
+    comments=str(text.text)
+    price = soup(html,'lxml').find('div',{'class':'kt-base-row kt-base-row--large kt-unexpandable-row'}).text
+    return comments+'\n'+price
+
+
+for item in getAdsURL('https://divar.ir/s/tehran'):
+    shortURL = getShortURL(item)
+    content = GetContent(item)
+    text = '___________________________________________' + '\n' + shortURL + "\n" + content + "\n"
+    print(text)
+    time.sleep(2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
