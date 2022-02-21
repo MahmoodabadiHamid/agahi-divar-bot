@@ -20,10 +20,8 @@ def getShortURL(longURL):
     return 'https://divar.ir/v/'+longURL['href'].split('/')[-1]
 
 
-def GetContent(adsURL):# This function Get phone, area and comment of ads
-    testH ='https://divar.ir'+adsURL['href']
-    #Get comment area_________________________
-    html=req.get(testH).text
+def GetContent(shortURL):# This function Get phone, area and comment of ads
+    html=req.get(shortURL).text
     text=soup(html,'lxml').find('p',{'class':'kt-description-row__text post-description kt-description-row__text--primary'})
     comments=str(text.text)
     price = ''.join([i.text+'\n' for i in soup(html,'lxml').find_all('div',{'class':'kt-base-row kt-base-row--large kt-unexpandable-row'})])
@@ -32,7 +30,7 @@ def GetContent(adsURL):# This function Get phone, area and comment of ads
 
 for item in getAdsURL('https://divar.ir/s/tehran'):
     shortURL = getShortURL(item)
-    content = GetContent(item)
+    content = GetContent(shortURL)
     text = '___________________________________________' + '\n' + shortURL + "\n" + content + "\n"
     print(text)
     time.sleep(2)
